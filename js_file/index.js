@@ -1,7 +1,7 @@
 // Load all the Catagory Button From API and Show them in a centered position
 
 
-// getLoad catagory data 
+// getLoad catagory data for button 
 const lodeCetagory = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
         .then(res => res.json())
@@ -10,14 +10,45 @@ const lodeCetagory = () => {
 };
 
 
+     // function for button active color 
+     const activeBtnColor = () =>{
+        const getBtn = document.getElementsByClassName('btn-ceragoris');
+        for(let btn of getBtn){
+            btn.classList.remove('active')
+        }  
+    };
+
+    
+
+    // there have a cetagory function here for id
+    const getButtonId = (id) => {
+        fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            //remove all btn active color class 
+            activeBtnColor()
+            
+            const cetagorybtn = document.getElementById(`btn${id}`)
+            cetagorybtn.classList.add('active')
+            showVideosOnDisplay(data.category)
+        })
+        .catch(error => console.log(error))
+    }
+
+
+   
+    
+
 // show the display cennter
-const displayCetagory = data => {
+const displayCetagory = data => {   
     const getButtonContainer = document.getElementById('button-containers')
     data.forEach(item => {
-        const button = document.createElement('button')
-        button.classList = 'btn p-4 m-5 '
-        button.innerText = item.category
-        getButtonContainer.appendChild(button)
+        const buttonDiv = document.createElement('div')
+        buttonDiv.innerHTML = `
+            <button id="btn${item.category_id}" onclick="getButtonId(${item.category_id})" class="mx-4 btn my-5 btn-ceragoris"> ${item.category}
+            </button>
+        `
+        getButtonContainer.appendChild(buttonDiv)
     })
 
 };
@@ -25,11 +56,11 @@ const displayCetagory = data => {
 
 
 
+// get videos thammall api here
 
-
-const getVideos = async () => {
+const loadVideos = async (searchId = '') => {
     try {
-        const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+        const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchId}`)
         const data = await res.json()
         showVideosOnDisplay(data.videos)
     } catch (error) {
@@ -38,13 +69,51 @@ const getVideos = async () => {
 };
 
 
+// click ditails here 
+const clickDitails = async(videoid) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${videoid}`;
+    const res = await fetch(url)
+    const data = await res.json()
+    displayDitails(data)
+    
+};
 
+// displayLoad data details on display 
+    const displayDitails = (data) =>{
+        const getContaint = document.getElementById('context-container')
+        getContaint.innerHTML = `
+         <img  src="${data.video?.thumbnail}"/>
+         <p>${data.video?.description}</p>
+        `
+
+        // first way to show Modal 
+        // document.getElementById('modalsNotis').click()
+
+        // second way to show modal 
+        document.getElementById('modalsNoti').showModal()
+    };
+
+
+// show display from here that function 
 
 const showVideosOnDisplay = (videos) => {
     const videosContainer = document.getElementById('videos-container');
+    videosContainer.innerHTML = "";
+    if(videos.length == 0){
+        videosContainer.innerHTML = `
+            <div class="flex justify-center items-center h-lvh flex-col gap-4">
+                <p class="bolder text-3xl">There Have No Any Contant</p>
+                <img class="w-[200px] h-[200px]" src="assets/icon.png" />
+            </div>
+        `
+        videosContainer.classList.remove('grid')
+        return ;
+    }else{
+        videosContainer.classList.add('grid')
+    }
 
     videos.forEach(video => {
-        // console.log(video.others.posted_date.length)
+        // console.log(video.video_id)
         const div = document.createElement('div')
         div.classList = 'card '
         div.innerHTML = `
@@ -65,10 +134,11 @@ const showVideosOnDisplay = (videos) => {
              <p>${video.authors[0].profile_name}</p>
             
              ${video.authors[0]?.verified == true ? `<img class="w-5 h-5 "  src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" /> ` : ''}
-             
              </div>
         </div>
-    
+        <div>
+        <button id ="ditails-btn" onclick="clickDitails('${video.video_id}')" class="btn bg-red-500 px-2">Ditails</button> 
+        </div>
     
   </div>
         `
@@ -76,10 +146,15 @@ const showVideosOnDisplay = (videos) => {
     })
 }
 
+document.getElementById('input-value').addEventListener('keyup', (event)=>{
+    
+    loadVideos(event.target.value)
 
+});
 
 lodeCetagory()
-getVideos()
+loadVideos()
+
 
 
 

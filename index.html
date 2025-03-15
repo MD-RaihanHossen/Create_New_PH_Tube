@@ -8,13 +8,15 @@
     <!-- link add from daisyui -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- css file add  -->
+    <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
     <nav class="flex p-4 gap-4 w-11/12 mx-auto justify-between border-b-1 mt-4">
         <!-- logo Here -->
         <div class="logo w-[100px]">
-            <img src="assets Here/Logo.png" alt="" srcset="">
+            <img src="assets/Logo.png" alt="" srcset="">
         </div>
         <!-- search input Here -->
         <div class="search-box text-center">
@@ -26,12 +28,12 @@
                         <path d="m21 21-4.3-4.3"></path>
                     </g>
                 </svg>
-                <input class=" w-[400px] border-0" type="search" class="grow" placeholder="Search" />
+                <input  id="input-value" type="search" class="grow  w-[400px] border-0" placeholder="Search" />
             </label>
         </div>
         <!-- button Here -->
         <div class="button-container">
-            <button class="btn">Blog</button>
+            <button class="btn ">Blog</button>
         </div>
     </nav>
     <nav id="">
@@ -40,15 +42,35 @@
         </div>
     </nav>
     <main>
-        <section id="videos-container" class="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 ">
+        <section id="videos-container"
+            class="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 ">
 
+        </section>
+        <section>
+            <!-- Open the modal using ID.showModal() method -->
+            <button id="modalsNotis" class="btn hidden" onclick="modalsNoti.showModal()">
+                open modal
+            </button>
+            <dialog id="modalsNoti" class="modal">
+                <div class="modal-box">
+                    <div  id="context-container">
+
+                    </div>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <!-- if there is a button in form, it will close the modal -->
+                            <button class="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </section>
     </main>
     <footer>
 
     </footer>
     <script src="js_file/index.js"></script>
-    <script src="js_file/test.js"></script>
+    <script src="js_file/timeMathTest.js"></script>
 </body>
 
 </html>
